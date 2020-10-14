@@ -1,8 +1,8 @@
 require 'rails_helper.rb'
 
 describe MoviesController, :type => :controller do
-    describe 'Find Movies With Same Director' do
-        it 'calls the model method that performs finding movies with same director' do
+    describe 'Finding movies with identical director' do
+        it 'call the model method which finds movies with identical director' do
             expect(Movie).to receive(:find_similar_movies).with('1')
             #Movie.should_receive(:find_similar_movies).with("1")
             get :director, {:id => '1'}
@@ -13,7 +13,7 @@ describe MoviesController, :type => :controller do
             get :director, {:id => '1'}
             expect(response).to render_template(:director)
         end
-        it 'makes find similar movies available to template' do
+        it 'creates find similar movies available to template' do
             @movies = [double('Movie'), double('Movie')]
             @movie = double('Movie')
             Movie.stub(:find_similar_movies).and_return([@movies,0,@movie])
@@ -21,7 +21,7 @@ describe MoviesController, :type => :controller do
             assigns(:movie).should == @movie
             assigns(:movies).should == @movies
         end
-        it 'makes find similar movies available to template sad path' do
+        it 'creates find similar movies available to sad path template' do
             @movie = double('Movie', :title => 'MovieRandom')
             Movie.stub(:find_similar_movies).and_return([nil,1,@movie])
             get :director, {:id => '1'}
@@ -29,18 +29,18 @@ describe MoviesController, :type => :controller do
             flash[:notice].should eq("'#{@movie.title}' has no director info.")
         end
     end
-    describe "Sorting movies according to tile and release date" do
-        it "sort according to movie title" do 
+    describe "Sorting movies based on tile and release date" do
+        it "sort based on movie title" do 
             get :index, sort: "title"
             expect(response.body).to include "title"
         end
-        it "sort according to release date" do 
+        it "sort based on release date" do 
             get :index, sort: "release_date"
             expect(response.body).to include "release_date"
         end 
     end
-    describe "Sorting movies according to rating" do
-        it "sort movies according to rating" do 
+    describe "Sorting movies based on rating" do
+        it "sort movies based on rating" do 
             @ratings={"G"=>"1", "NC-17"=>"1", "R"=>"1"}
             get :index, ratings: @ratings
             expect(response.body).to include "ratings"
@@ -64,9 +64,9 @@ describe MoviesController, :type => :controller do
 
     describe "create" do
         it "create movie " do
-            @movie = {title: "Adam", rating: "PG"}
+            @movie = {title: "Love", rating: "PG"}
             post :create, movie: @movie
-            expect(flash[:notice]).to eq("Adam was successfully created.")
+            expect(flash[:notice]).to eq("Love was successfully created.")
             expect(response).to redirect_to(movies_path)
         end
     end
@@ -101,7 +101,7 @@ describe MoviesController, :type => :controller do
     end
 
     describe "new" do
-        it "render the new template" do
+        it "render new template" do
             get :new 
             expect(response).to render_template(:new)
         end
